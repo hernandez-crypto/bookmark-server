@@ -78,46 +78,43 @@ bookmarksRouter
   .get((req, res) => {
     res.json(serializeBookmark(res.bookmark));
   })
-
   .patch(bodyParser, (req, res, next) => {
+    let { description, rating } = req.body;
     const { bookmark_id } = req.params;
-    const { description, rating } = req.body;
-    console.log(parseInt(rating));
-    console.log(req.body);
-    if (!Number.isInteger(rating) || rating < 0 || rating > 5) {
-      logger.error(`Invalid rating '${rating}' supplied`);
-      return res.status(400).send(`'rating' must be a number between 0 and 5`);
-    }
+    rating = parseInt(rating);
+    updateBookmark();
     let Bookmark;
-    BookarksService.getById(req.app.get('db'), bookmark_id)
-      .then(bookmark => {
-        console.log(bookmark);
-        Bookmark = bookmark;
-        next();
-      })
-      .catch(next);
-
-    let newBookmark = {
-      ...Bookmark,
-      description,
-      rating,
-    };
-    console.log(newBookmark);
-    // BookarksService.updateBookmark(
-    //   req.app.get('db'),
-    //   req.params.bookmark_id,
-    //   newBookmark
-    // )
-    //   .then(bookmark => {
-    //     logger.info(`Card with id ${bookmark.id} created.`);
-    //     res
-    //       .status(201)
-    //       .location(`/bookmarks/${bookmark.id}`)
-    //       .json(serializeBookmark(bookmark));
-    //   })
-    // .catch(next);
+    let newBookmark;
+    async function updateBookmark() {
+      try {
+        Bookmark = await BookarksService.getById(
+          req.app.get('db'),
+          bookmark_id
+        );
+        newBookmark = await {
+          ...Bookmark,
+          description:
+            description === undefined ? Bookmark.description : description,
+          rating:
+            !Number.isInteger(rating) || rating < 0 || rating > 5
+              ? Bookmark.rating
+              : rating,
+        };
+        BookarksService.updateBookmark(
+          req.app.get('db'),
+          req.params.bookmark_id,
+          newBookmark
+        )
+          .then(bookmark => {
+            logger.info(`Card with id ${newBookmark.id} updated.`);
+            res.status(204).end();
+          })
+          .catch(next);
+      } catch (error) {
+        next(error);
+      }
+    }
   })
-
   .delete((req, res, next) => {
     const { bookmark_id } = req.params;
     BookarksService.deleteBookmark(req.app.get('db'), bookmark_id)
