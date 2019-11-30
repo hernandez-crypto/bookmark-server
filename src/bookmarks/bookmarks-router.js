@@ -78,6 +78,7 @@ bookmarksRouter
   .get((req, res) => {
     res.json(serializeBookmark(res.bookmark));
   })
+
   .patch(bodyParser, (req, res, next) => {
     let { description, rating } = req.body;
     const { bookmark_id } = req.params;
@@ -115,6 +116,7 @@ bookmarksRouter
       }
     }
   })
+
   .delete((req, res, next) => {
     const { bookmark_id } = req.params;
     BookarksService.deleteBookmark(req.app.get('db'), bookmark_id)
