@@ -18,9 +18,9 @@ const serializeBookmark = bookmark => ({
 bookmarksRouter
   .route('/bookmarks')
   .get((req, res, next) => {
-    console.log('req recieved', req);
     BookarksService.getAllBookmarks(req.app.get('db'))
       .then(bookmarks => {
+        console.log(bookmarks);
         res.json(bookmarks.map(serializeBookmark));
       })
       .catch(next);
