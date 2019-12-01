@@ -6,6 +6,7 @@ const BookmarksService = require('./bookmarks-service');
 
 const bookmarksRouter = express.Router();
 const bodyParser = express.json();
+
 const serializeBookmark = bookmark => ({
   id: bookmark.id,
   title: xss(bookmark.title),
@@ -17,7 +18,6 @@ const serializeBookmark = bookmark => ({
 bookmarksRouter
   .route('/')
   .get((req, res, next) => {
-    console.log(req.app);
     BookmarksService.getAllBookmarks(req.app.get('db'))
       .then(bookmarks => {
         console.log('after get');
