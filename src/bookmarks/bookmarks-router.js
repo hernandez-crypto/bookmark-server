@@ -17,7 +17,7 @@ const serializeBookmark = bookmark => ({
 bookmarksRouter
   .route('/')
   .get((req, res, next) => {
-    console.log('before get');
+    console.log(req.app);
     BookmarksService.getAllBookmarks(req.app.get('db'))
       .then(bookmarks => {
         console.log('after get');
