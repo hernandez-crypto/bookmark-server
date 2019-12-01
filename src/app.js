@@ -1,4 +1,3 @@
-require('dotenv').config();
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
@@ -23,7 +22,7 @@ app.get('/', (req, res) => {
 });
 
 app.use(validateBearerToken);
-app.use(bookmarksRouter);
+app.use('/bookmarks', bookmarksRouter);
 
 app.use(errorHandler);
 

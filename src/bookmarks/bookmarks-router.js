@@ -1,4 +1,3 @@
-/* eslint-disable quotes */
 const express = require('express');
 const { isWebUri } = require('valid-url');
 const xss = require('xss');
@@ -16,7 +15,7 @@ const serializeBookmark = bookmark => ({
 });
 
 bookmarksRouter
-  .route('/bookmarks')
+  .route('/')
   .get((req, res, next) => {
     BookmarksService.getAllBookmarks(req.app.get('db'))
       .then(bookmarks => {
@@ -59,7 +58,7 @@ bookmarksRouter
   });
 
 bookmarksRouter
-  .route('/bookmarks/:bookmark_id')
+  .route('/:bookmark_id')
   .all((req, res, next) => {
     const { bookmark_id } = req.params;
     BookmarksService.getById(req.app.get('db'), bookmark_id)
