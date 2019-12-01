@@ -20,7 +20,6 @@ bookmarksRouter
   .get((req, res, next) => {
     BookmarksService.getAllBookmarks(req.app.get('db'))
       .then(bookmarks => {
-        console.log('after get');
         res.json(bookmarks.map(serializeBookmark));
       })
       .catch(next);
